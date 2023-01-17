@@ -7,7 +7,6 @@ import tkinter as tk
 
 from tkinter import messagebox
 from make_df import run
-from os.path import exists
 
 FONT = "Arial", 16
 
@@ -23,11 +22,6 @@ def run_btn():
     view = tuple(map(float, view.split(',')))
     size = image_size.get()
     size = tuple(map(int, size.split(',')))
-
-    if not exists(file_name):
-        msg = f'File does not exist: {file_name}'
-        tk.messagebox.showerror(title=None, message=msg)
-        return
 
     try:
         run(file_name, cam, tar, view, size)

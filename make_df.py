@@ -7,6 +7,7 @@ import numpy as np
 
 from face import Face
 from PIL import Image
+from os.path import exists
 
 camera = np.array([])
 target = np.array([])
@@ -36,6 +37,15 @@ def run(file_name, cam, tar, view, size):
     global camera, target
     global image_width, image_height, offset_x, offset_y
     global scale_x, scale_y, grid, min_value, max_value
+
+    if not exists(file_name):
+        raise Exception(f'File does not exist: {file_name}')
+
+    if view[0] <= 0.0 or view[1] <= 0.0:
+        raise Exception('Invalid View')
+
+    if size[0] <= 0 or size[1] <= 0:
+        raise Exception('Invalid Size')
 
     # Save parameters
     camera = np.array(cam)
@@ -115,7 +125,10 @@ def rotate_vertices():
 
     # Calculate angles to rotate about the Y then X axes
     cx, cy, cz = camera[0], camera[1], camera[2]
+    print(cx, cy, cz)
     xz = math.sqrt((cx ** 2) + (cz ** 2))
+    if round(cz, 8) == 0.0 or round(xz, 8) == 0.0:
+        raise Exception('Camera is too close to objects.')
     angle_y = np.arctan(cx / cz)
     angle_x = -np.arctan(cy / xz)
 
